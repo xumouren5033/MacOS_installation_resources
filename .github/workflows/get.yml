@@ -1,0 +1,29 @@
+name: 一键获取黑苹果资源包
+on:
+  workflow_dispatch:
+jobs:
+  download_and_upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install wget
+        run: sudo apt-get update && sudo apt-get install wget -y
+      
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          mkdir tools
+
+
+      - name: 正在获取RapidEFI
+        run: |
+          latest_release=$(curl -s https://api.github.com/repos/JeoJay127/RapidEFI-Tool/releases/latest | jq -r '.tag_name')
+          wget -O tools/RapidEFI-$latest_release.zip https://github.com/JeoJay127/RapidEFI-Tool/releases/download/$latest_release/RapidEFI-v$latest_release-Windows.zip
+
+      - name: 正在获取OCAT
+        run: |
+          latest_release=$(curl -s https://api.github.com/repos/ic005k/OCAuxiliaryTools/releases/latest | jq -r '.tag_name')
+          wget -O tools/OCAT-$latest_release.zip https://github.com/ic005k/OCAuxiliaryTools/release
